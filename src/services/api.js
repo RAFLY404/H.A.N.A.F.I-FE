@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:8000';
+export const API_URL = 'https://hanafi-be-production.up.railway.app';
 
 /**
  * Predefined clinical presets to test prediction capabilities.
