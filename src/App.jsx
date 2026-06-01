@@ -65,7 +65,16 @@ export default function App() {
       setResult(response);
     } catch (err) {
       console.error('Prediction failed:', err);
-      setError(err.message || 'Failed to communicate with prediction server.');
+      let errMsg = err.message || 'Failed to communicate with prediction server.';
+      if (
+        errMsg.toLowerCase().includes('failed to fetch') || 
+        errMsg.toLowerCase().includes('load failed') || 
+        errMsg.toLowerCase().includes('networkerror') ||
+        err.name === 'TypeError'
+      ) {
+        errMsg = 'Failed to connect to the prediction server. The backend server on Railway might be undergoing a cold start (waking up after inactivity), which can take 30-50 seconds. Please wait a moment and try again.';
+      }
+      setError(errMsg);
       setResult(null);
     } finally {
       setLoading(false);
@@ -88,9 +97,9 @@ export default function App() {
         </div>
         <div className="control-panel">
           {/* API STATUS BADGE */}
-          <div className="api-badge">
-            <span className={`api-dot ${apiOnline ? 'online' : 'offline'}`}></span>
-            <span>API {apiOnline ? 'Online' : 'Offline'}</span>
+          <div className={`api-badge ${apiOnline === null ? '' : apiOnline ? 'status-online' : 'status-offline'}`}>
+            <span className={`api-dot ${apiOnline ? 'online' : apiOnline === false ? 'offline' : ''}`}></span>
+            <span>API {apiOnline === null ? 'Checking…' : apiOnline ? 'Online' : 'Offline'}</span>
           </div>
 
           {/* THEME TOGGLER */}
@@ -108,9 +117,9 @@ export default function App() {
 
       {/* ERROR BANNER */}
       {error && (
-        <div className="error-banner">
-          <span>⚠️</span>
-          <span><strong>Error:</strong> {error}</span>
+        <div className="error-banner" role="alert">
+          <span style={{ flexShrink: 0, fontSize: '1rem' }}>⚠️</span>
+          <span><strong>Error:&nbsp;</strong>{error}</span>
         </div>
       )}
 

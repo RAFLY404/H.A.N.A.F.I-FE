@@ -2,10 +2,14 @@ import { presets } from '../services/api';
 
 // Helper component for tooltips and info icons
 const InfoIcon = ({ text }) => (
-  <span className="info-icon">
+  <button 
+    type="button" 
+    className="info-icon" 
+    aria-label={`More details: ${text}`}
+  >
     i
-    <span className="tooltip">{text}</span>
-  </span>
+    <span className="tooltip" role="tooltip">{text}</span>
+  </button>
 );
 
 export default function PatientForm({ formData, setFormData, onSubmit, onReset, loading }) {
@@ -33,35 +37,41 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
     <div className="card">
       <div className="card-title-group">
         <h2 className="card-title">
-          <span>🩺</span> Patient Clinical History
+          <span aria-hidden="true">🩺</span> Patient Clinical History
         </h2>
-        <div className="presets-container">
-          <span className="preset-label">Quick Presets:</span>
-          <button 
-            type="button" 
-            className="preset-btn"
-            onClick={() => loadPreset('normal')}
-            disabled={loading}
-          >
-            Low Risk
-          </button>
-          <button 
-            type="button" 
-            className="preset-btn"
-            onClick={() => loadPreset('borderline')}
-            disabled={loading}
-          >
-            Moderate
-          </button>
-          <button 
-            type="button" 
-            className="preset-btn"
-            onClick={() => loadPreset('critical')}
-            disabled={loading}
-          >
-            High Risk
-          </button>
-        </div>
+        <span className="brand-subtitle">Heart Failure Risk Predictor</span>
+      </div>
+
+      {/* PRESETS ROW */}
+      <div className="presets-container">
+        <span className="preset-label">Quick Fill:</span>
+        <button 
+          type="button" 
+          className="preset-btn"
+          onClick={() => loadPreset('normal')}
+          disabled={loading}
+          title="Fill with typical low-risk patient values"
+        >
+          🟢 Low Risk
+        </button>
+        <button 
+          type="button" 
+          className="preset-btn"
+          onClick={() => loadPreset('borderline')}
+          disabled={loading}
+          title="Fill with moderate-risk patient values"
+        >
+          🟡 Moderate Risk
+        </button>
+        <button 
+          type="button" 
+          className="preset-btn"
+          onClick={() => loadPreset('critical')}
+          disabled={loading}
+          title="Fill with high-risk patient values"
+        >
+          🔴 High Risk
+        </button>
       </div>
 
       <form onSubmit={handleFormSubmit}>
@@ -79,11 +89,14 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
               </div>
               <input
                 id="age"
+                name="age"
                 type="number"
                 min="1"
                 max="120"
                 required
                 className="form-input"
+                placeholder="e.g. 60…"
+                autoComplete="off"
                 value={formData.age || ''}
                 onChange={(e) => handleInputChange('age', e.target.value)}
                 disabled={loading}
@@ -96,19 +109,25 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
                 <label className="form-label">Biological Sex</label>
                 <InfoIcon text="Patient biological sex" />
               </div>
-              <div className="toggle-switch-group">
-                <div 
+              <div className="toggle-switch-group" role="group" aria-label="Biological Sex">
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.sex, 10) === 1 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('sex', 1)}
+                  onClick={() => handleInputChange('sex', 1)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.sex, 10) === 1}
                 >
                   Male
-                </div>
-                <div 
+                </button>
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.sex, 10) === 0 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('sex', 0)}
+                  onClick={() => handleInputChange('sex', 0)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.sex, 10) === 0}
                 >
                   Female
-                </div>
+                </button>
               </div>
             </div>
 
@@ -126,19 +145,25 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
                 <label className="form-label">Anaemia</label>
                 <InfoIcon text="Decrease of red blood cells or hemoglobin" />
               </div>
-              <div className="toggle-switch-group">
-                <div 
+              <div className="toggle-switch-group" role="group" aria-label="Anaemia Status">
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.anaemia, 10) === 1 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('anaemia', 1)}
+                  onClick={() => handleInputChange('anaemia', 1)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.anaemia, 10) === 1}
                 >
                   Yes
-                </div>
-                <div 
+                </button>
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.anaemia, 10) === 0 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('anaemia', 0)}
+                  onClick={() => handleInputChange('anaemia', 0)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.anaemia, 10) === 0}
                 >
                   No
-                </div>
+                </button>
               </div>
             </div>
 
@@ -148,19 +173,25 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
                 <label className="form-label">Diabetes</label>
                 <InfoIcon text="If the patient has a history of diabetes mellitus" />
               </div>
-              <div className="toggle-switch-group">
-                <div 
+              <div className="toggle-switch-group" role="group" aria-label="Diabetes Status">
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.diabetes, 10) === 1 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('diabetes', 1)}
+                  onClick={() => handleInputChange('diabetes', 1)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.diabetes, 10) === 1}
                 >
                   Yes
-                </div>
-                <div 
+                </button>
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.diabetes, 10) === 0 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('diabetes', 0)}
+                  onClick={() => handleInputChange('diabetes', 0)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.diabetes, 10) === 0}
                 >
                   No
-                </div>
+                </button>
               </div>
             </div>
 
@@ -170,19 +201,25 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
                 <label className="form-label">High Blood Pressure</label>
                 <InfoIcon text="If the patient has a history of hypertension" />
               </div>
-              <div className="toggle-switch-group">
-                <div 
+              <div className="toggle-switch-group" role="group" aria-label="High Blood Pressure Status">
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.high_blood_pressure, 10) === 1 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('high_blood_pressure', 1)}
+                  onClick={() => handleInputChange('high_blood_pressure', 1)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.high_blood_pressure, 10) === 1}
                 >
                   Yes
-                </div>
-                <div 
+                </button>
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.high_blood_pressure, 10) === 0 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('high_blood_pressure', 0)}
+                  onClick={() => handleInputChange('high_blood_pressure', 0)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.high_blood_pressure, 10) === 0}
                 >
                   No
-                </div>
+                </button>
               </div>
             </div>
 
@@ -192,19 +229,25 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
                 <label className="form-label">Active Smoking</label>
                 <InfoIcon text="If the patient actively smokes tobacco" />
               </div>
-              <div className="toggle-switch-group">
-                <div 
+              <div className="toggle-switch-group" role="group" aria-label="Active Smoking Status">
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.smoking, 10) === 1 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('smoking', 1)}
+                  onClick={() => handleInputChange('smoking', 1)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.smoking, 10) === 1}
                 >
                   Yes
-                </div>
-                <div 
+                </button>
+                <button 
+                  type="button"
                   className={`toggle-switch-option ${parseInt(formData.smoking, 10) === 0 ? 'active' : ''}`}
-                  onClick={() => !loading && handleInputChange('smoking', 0)}
+                  onClick={() => handleInputChange('smoking', 0)}
+                  disabled={loading}
+                  aria-pressed={parseInt(formData.smoking, 10) === 0}
                 >
                   No
-                </div>
+                </button>
               </div>
             </div>
 
@@ -224,11 +267,14 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
               </div>
               <input
                 id="ejection_fraction"
+                name="ejection_fraction"
                 type="number"
                 min="10"
                 max="80"
                 required
                 className="form-input form-input-with-unit"
+                placeholder="e.g. 35…"
+                autoComplete="off"
                 value={formData.ejection_fraction || ''}
                 onChange={(e) => handleInputChange('ejection_fraction', e.target.value)}
                 disabled={loading}
@@ -244,12 +290,15 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
               </div>
               <input
                 id="serum_creatinine"
+                name="serum_creatinine"
                 type="number"
                 step="0.1"
                 min="0.1"
                 max="15.0"
                 required
                 className="form-input form-input-with-unit"
+                placeholder="e.g. 1.2…"
+                autoComplete="off"
                 value={formData.serum_creatinine || ''}
                 onChange={(e) => handleInputChange('serum_creatinine', e.target.value)}
                 disabled={loading}
@@ -265,11 +314,14 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
               </div>
               <input
                 id="serum_sodium"
+                name="serum_sodium"
                 type="number"
                 min="100"
                 max="150"
                 required
                 className="form-input form-input-with-unit"
+                placeholder="e.g. 138…"
+                autoComplete="off"
                 value={formData.serum_sodium || ''}
                 onChange={(e) => handleInputChange('serum_sodium', e.target.value)}
                 disabled={loading}
@@ -280,16 +332,19 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
             {/* CPK */}
             <div className="form-group">
               <div className="label-container">
-                <label className="form-label" htmlFor="cpk">Creatinine Phosphokinase</label>
+                <label className="form-label" htmlFor="creatinine_phosphokinase">Creatinine Phosphokinase</label>
                 <InfoIcon text="Level of the CPK enzyme in blood. Elevated levels indicate muscle tissue damage or cardiac stress." />
               </div>
               <input
-                id="cpk"
+                id="creatinine_phosphokinase"
+                name="creatinine_phosphokinase"
                 type="number"
                 min="10"
                 max="10000"
                 required
                 className="form-input form-input-with-unit"
+                placeholder="e.g. 250…"
+                autoComplete="off"
                 value={formData.creatinine_phosphokinase || ''}
                 onChange={(e) => handleInputChange('creatinine_phosphokinase', e.target.value)}
                 disabled={loading}
@@ -305,11 +360,14 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
               </div>
               <input
                 id="platelets"
+                name="platelets"
                 type="number"
                 min="10000"
                 max="900000"
                 required
                 className="form-input form-input-with-unit"
+                placeholder="e.g. 263000…"
+                autoComplete="off"
                 value={formData.platelets || ''}
                 onChange={(e) => handleInputChange('platelets', e.target.value)}
                 disabled={loading}
@@ -335,7 +393,7 @@ export default function PatientForm({ formData, setFormData, onSubmit, onReset, 
             className="btn btn-primary"
             disabled={loading}
           >
-            {loading ? 'Evaluating...' : 'Run Risk Evaluation'}
+            {loading ? 'Evaluating…' : 'Run Risk Evaluation'}
           </button>
         </div>
 

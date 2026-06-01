@@ -89,18 +89,18 @@ export default function ResultDisplay({ result, patientData }) {
   const getClinicalSummary = () => {
     if (risk_level === 'high') {
       return {
-        title: 'Critical Risk Level Detained',
+        title: 'Critical Risk Level Determined',
         desc: 'The model indicates a high probability of mortality. Close inpatient monitoring, adjustment of heart failure therapies (including neurohormonal blockade), and immediate cardiovascular consult are strongly recommended.',
       };
     }
     if (risk_level === 'medium') {
       return {
-        title: 'Moderate Risk Level Detained',
+        title: 'Moderate Risk Level Determined',
         desc: 'The patient exhibits moderate clinical risks. It is recommended to perform routine cardiac diagnostics (e.g. echo) and verify compliance with guideline-directed medical therapy (GDMT). Follow up in 2-4 weeks.',
       };
     }
     return {
-      title: 'Low Risk Level Detained',
+      title: 'Low Risk Level Determined',
       desc: 'The patient is classified as low risk. Continue standard maintenance care, educate on symptom monitoring (weight gain, swelling), and schedule normal periodic evaluations.',
     };
   };

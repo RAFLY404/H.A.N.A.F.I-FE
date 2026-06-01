@@ -86,6 +86,20 @@ export async function predictMortality(rawData) {
     smoking: parseInt(rawData.smoking, 10)
   };
 
+  // Validate all fields are provided and numeric
+  const missingOrInvalid = [];
+  for (const [key, value] of Object.entries(formattedData)) {
+    if (value === null || value === undefined || isNaN(value)) {
+      // Get user-friendly name
+      const name = key.replace(/_/g, ' ');
+      missingOrInvalid.push(name.charAt(0).toUpperCase() + name.slice(1));
+    }
+  }
+
+  if (missingOrInvalid.length > 0) {
+    throw new Error(`Missing or invalid value(s) for: ${missingOrInvalid.join(', ')}. Please ensure all fields are filled out correctly.`);
+  }
+
   const response = await fetch(`${API_URL}/predict`, {
     method: 'POST',
     headers: {
