@@ -143,7 +143,7 @@ export default function App() {
       {/* FOOTER INFO */}
       <footer className="footer-info">
         <p>
-          CardioGuard AI Client Panel. Powered by FastAPI ML Engine. &copy; {new Date().getFullYear()} Clinical Support Systems.
+          HANAFI AI Client Panel. &copy; {new Date().getFullYear()} Clinical Support Systems.
         </p>
       </footer>
     </>
