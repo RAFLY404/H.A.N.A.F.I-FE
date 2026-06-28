@@ -1,4 +1,4 @@
-export const API_URL = "hanafi-be.railway.internal";
+export const API_URL = "hanafi-be-production.up.railway.app";
 
 /**
  * Predefined clinical presets to test prediction capabilities.
